@@ -51,6 +51,8 @@
 
     <string name="pref_back_gesture_kill_title">ऐप को बंद करने के लिए लंबा बैक स्वाइप</string>
     <string name="pref_back_gesture_kill_summary">बैक स्वाइप जेस्चर को दबाकर रखें और फिर वर्तमान ऐप को ज़बरदस्ती बंद करने के लिए छोड़ दें।</string>
+    <string name="pref_back_gesture_kill_timeout_title">होल्ड करने का समय</string>
+    <string name="pref_back_gesture_kill_timeout_summary">ऐप बंद करने के लिए बैक स्वाइप को कितनी देर दबाकर रखना है (200ms – 3000ms)</string>
 
     <!-- Status bar -->
     <string name="cat_statusbar">स्टेटस बार</string>

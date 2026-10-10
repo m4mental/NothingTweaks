@@ -246,6 +246,19 @@
             app:summary="@string/pref_back_gesture_kill_summary"
             app:defaultValue="false"
             app:iconSpaceReserved="false" />
+
+        <com.souleven.nothingos.hooks.KillAppTimeoutSeekBarPreference
+            app:key="pref_back_gesture_kill_timeout"
+            app:title="@string/pref_back_gesture_kill_timeout_title"
+            app:summary="@string/pref_back_gesture_kill_timeout_summary"
+            app:defaultValue="500"
+            app:min="200"
+            android:max="3000"
+            app:seekBarIncrement="100"
+            app:showSeekBarValue="true"
+            app:updatesContinuously="true"
+            app:dependency="pref_back_gesture_kill"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
