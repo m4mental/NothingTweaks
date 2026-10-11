@@ -1,8 +1,9 @@
 package com.souleven.nothingos.hooks
 
+import android.content.SharedPreferences
 import de.robv.android.xposed.XSharedPreferences
 
-class Prefs(private val delegate: XSharedPreferences) {
+class Prefs(private val delegate: SharedPreferences) {
 
     private companion object {
         const val RELOAD_INTERVAL_MS = 1_000L
@@ -15,7 +16,7 @@ class Prefs(private val delegate: XSharedPreferences) {
         val now = System.currentTimeMillis()
         if (now - lastReload >= RELOAD_INTERVAL_MS) {
             lastReload = now
-            delegate.reload()
+            (delegate as? XSharedPreferences)?.reload()
         }
     }
 
@@ -44,8 +45,8 @@ class Prefs(private val delegate: XSharedPreferences) {
 
     fun forceReload() {
         lastReload = System.currentTimeMillis()
-        delegate.reload()
+        (delegate as? XSharedPreferences)?.reload()
     }
 
-    val file get() = delegate.file
+    val file get() = (delegate as? XSharedPreferences)?.file
 }

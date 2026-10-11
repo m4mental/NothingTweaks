@@ -1,6 +1,7 @@
 <resources>
     <!-- App & Status -->
     <string name="app_name">Nothing Tweaks</string>
+    <string name="app_description">NothingOS कस्टमाइज़ेशन</string>
     <string name="status_active">मॉड्यूल सक्रिय</string>
     <string name="status_inactive">मॉड्यूल निष्क्रिय</string>
     <string name="status_active_desc">हुक सफलतापूर्वक लोड हो गए हैं।</string>

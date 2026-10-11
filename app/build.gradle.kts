@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-    compileOnly(files("libs/api-82.jar"))
+    compileOnly("io.github.libxposed:api:102.0.0")
 
     implementation(libs.androidx.activity)
     implementation(libs.androidx.appcompat)

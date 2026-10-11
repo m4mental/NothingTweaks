@@ -1,6 +1,7 @@
 <resources>
     <!-- App & Status -->
     <string name="app_name">Nothing Tweaks</string>
+    <string name="app_description">NothingOS Customisations</string>
     <string name="status_active">Module active</string>
     <string name="status_inactive">Module not active</string>
     <string name="status_active_desc">Hooks are loaded successfully.</string>

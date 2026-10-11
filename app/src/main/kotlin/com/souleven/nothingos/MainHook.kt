@@ -20,14 +20,16 @@ import com.souleven.nothingos.hooks.NotificationIconHooks
 import com.souleven.nothingos.hooks.SpacingHooks
 import com.souleven.nothingos.hooks.StatusBarBrightnessHooks
 import com.souleven.nothingos.hooks.FlagSecureHooks
-import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import io.github.libxposed.api.XposedModule
+import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam
+import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam
 
-class MainHook : IXposedHookLoadPackage {
+class MainHook : XposedModule() {
 
     companion object {
         const val TAG = "NothingTweaks:"
@@ -37,7 +39,29 @@ class MainHook : IXposedHookLoadPackage {
         const val PKG_SELF = "com.souleven.nothingos"
     }
 
-    override fun handleLoadPackage(lpparam: LoadPackageParam) {
+    override fun onPackageLoaded(param: PackageLoadedParam) {
+        XposedBridge.init(this)
+        val lpparam = LoadPackageParam(
+            param.packageName,
+            param.defaultClassLoader,
+            param.applicationInfo,
+            param.isFirstPackage
+        )
+        handlePackageLoaded(lpparam)
+    }
+
+    override fun onSystemServerStarting(param: SystemServerStartingParam) {
+        XposedBridge.init(this)
+        val lpparam = LoadPackageParam(
+            "android",
+            param.classLoader,
+            null,
+            true
+        )
+        handlePackageLoaded(lpparam)
+    }
+
+    private fun handlePackageLoaded(lpparam: LoadPackageParam) {
         if (lpparam.packageName == PKG_SELF) {
             installSelfDetection(lpparam)
             return
@@ -52,9 +76,7 @@ class MainHook : IXposedHookLoadPackage {
         if (lpparam.packageName !in allowedPackages) return
 
         val raw = try {
-            XSharedPreferences(PKG_SELF, PREFS_NAME).apply {
-                makeWorldReadable()
-            }
+            XSharedPreferences(PKG_SELF, PREFS_NAME)
         } catch (t: Throwable) {
             XposedBridge.log("$TAG FATAL: could not load prefs: ${t.message}")
             XposedBridge.log(t)
@@ -68,18 +90,6 @@ class MainHook : IXposedHookLoadPackage {
 
         val prefs = Prefs(raw)
         prefs.forceReload()
-
-        val readable = try {
-            prefs.file.canRead()
-        } catch (t: Throwable) {
-            false
-        }
-        if (!readable) {
-            XposedBridge.log(
-                "$TAG WARNING: prefs file not readable yet. Open the Nothing Tweaks app once " +
-                        "and toggle a setting so the file is created, then restart SystemUI."
-            )
-        }
 
         if (lpparam.packageName == "android") {
             com.souleven.nothingos.hooks.SystemHooks.init(lpparam.classLoader, prefs)
@@ -116,7 +126,7 @@ class MainHook : IXposedHookLoadPackage {
         if (lpparam.packageName == "android" || lpparam.packageName == PKG_SYSTEMUI) {
             hooks.add("FlagSecureHooks" to FlagSecureHooks())
         }
-        
+
         for ((name, hook) in hooks) {
             try {
                 hook.handleLoadPackage(lpparam, prefs)
